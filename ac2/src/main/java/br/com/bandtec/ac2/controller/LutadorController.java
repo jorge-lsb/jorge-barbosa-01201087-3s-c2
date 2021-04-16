@@ -74,22 +74,28 @@ public class LutadorController {
 
         Optional<Lutador> lutadorApanha = repository.findById(luta.getIdLutadorApanha());
         Optional<Lutador> lutadorBate = repository.findById(luta.getIdLutadorBate());
-        Double vida = lutadorApanha.get().getVida() - lutadorBate.get().getForcaGolpe();
-        lutadorApanha.get().setVida(vida < 0 ? 0 : vida);
 
-        if (vida <= 0) {
-            lutadorApanha.get().setVivo(false);
+        if (lutadorApanha.isPresent() && lutadorBate.isPresent()){
+            Double vida = lutadorApanha.get().getVida() - lutadorBate.get().getForcaGolpe();
+            lutadorApanha.get().setVida(vida < 0 ? 0 : vida);
+
+            if (vida <= 0) {
+                lutadorApanha.get().setVivo(false);
+            }
+
+            lutadorApanha.get().setId(luta.getIdLutadorApanha());
+            repository.save(lutadorApanha.get());
+
+            List<Lutador> lutadorsEnvolvidos = new ArrayList<>();
+
+            lutadorsEnvolvidos.add(lutadorApanha.get());
+            lutadorsEnvolvidos.add(lutadorBate.get());
+
+            return ResponseEntity.status(201).body(lutadorsEnvolvidos);
+        }else {
+            return ResponseEntity.notFound().build();
         }
 
-        lutadorApanha.get().setId(luta.getIdLutadorApanha());
-        repository.save(lutadorApanha.get());
-
-        List<Lutador> lutadorsEnvolvidos = new ArrayList<>();
-
-        lutadorsEnvolvidos.add(lutadorApanha.get());
-        lutadorsEnvolvidos.add(lutadorBate.get());
-
-        return ResponseEntity.status(201).body(lutadorsEnvolvidos);
 
 
     }
