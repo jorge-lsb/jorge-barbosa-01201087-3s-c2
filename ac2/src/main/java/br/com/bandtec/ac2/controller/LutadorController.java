@@ -100,5 +100,12 @@ public class LutadorController {
 
     }
 
+    @GetMapping("/mortos ")
+    public ResponseEntity getMortos() {
+        Integer lutadoresmortos = repository.countAllByVivoIsFalse();
+
+        return ResponseEntity.ok().body(lutadoresmortos);
+    }
+
 
 }

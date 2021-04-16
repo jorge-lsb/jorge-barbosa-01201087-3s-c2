@@ -10,4 +10,6 @@ public interface LutadorRepository extends JpaRepository<Lutador, Integer> {
     List<Lutador> findAllByOrderByForcaGolpeDesc();
 
     Integer countAllByVivoIsTrue();
+
+    Integer countAllByVivoIsFalse();
 }
